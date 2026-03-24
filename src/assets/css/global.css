@@ -1,0 +1,267 @@
+/* PrimeVue font size customization using CSS custom properties */
+:root {
+  /* Override PrimeVue's base font size - this affects all components */
+  --p-font-size-base: 14px;
+}
+
+/* Apply Inter font as default across the entire application */
+body {
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    sans-serif;
+  font-feature-settings:
+    'cv05', 'cv08', 'cv11'; /* Enable Inter's stylistic sets for better readability */
+  font-variation-settings: normal;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: var(--p-font-size-base);
+}
+
+/* Reset default margins and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Ensure consistent line height and improve readability */
+html {
+  color-scheme: light;
+  font-size: var(--p-font-size-base);
+}
+
+/* Complete button reset */
+button,
+input[type='button'],
+input[type='submit'],
+input[type='reset'] {
+  /* Remove all default styles */
+  all: unset;
+
+  /* Reset box model */
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+
+  /* Reset font inheritance */
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+
+  /* Reset native appearance */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* Reset outline for custom focus handling */
+  outline: none;
+
+  /* Pointer cursor for better UX */
+  cursor: pointer;
+
+  /* Reset text properties */
+  text-align: inherit;
+  text-decoration: none;
+  text-transform: none;
+
+  /* Box sizing */
+  box-sizing: border-box;
+
+  /* Disable user selection */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+
+  /* Touch action for mobile optimization */
+  touch-action: manipulation;
+
+  /* Remove tap highlight on mobile */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Focus visible reset for accessibility */
+button:focus-visible,
+input[type='button']:focus-visible,
+input[type='submit']:focus-visible,
+input[type='reset']:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Ensure buttons display as inline-block */
+button,
+input[type='button'],
+input[type='submit'],
+input[type='reset'] {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ============================================
+   Additional Element Resets
+   ============================================ */
+
+/* Media elements reset - responsive by default */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Remove default list styles */
+ul,
+ol {
+  list-style: none;
+}
+
+/* Anchor reset - inherit colors, remove underline */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Table reset */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Form elements reset - inherit font styles */
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+/* Textarea reset - prevent horizontal resize */
+textarea {
+  resize: vertical;
+}
+
+/* Remove default fieldset styles */
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Legend reset */
+legend {
+  padding: 0;
+}
+
+/* Remove default summary marker */
+summary {
+  display: list-item;
+  cursor: pointer;
+}
+
+/* Horizontal rule reset */
+hr {
+  border: none;
+  border-top: 1px solid currentColor;
+  opacity: 0.25;
+}
+
+/* Preformatted text - prevent overflow */
+pre {
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Code elements - inherit font size */
+code,
+kbd,
+samp,
+pre {
+  font-family:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.875em;
+}
+
+/* Blockquote reset */
+blockquote {
+  margin: 0;
+  padding: 0;
+}
+
+/* Address reset - remove italic */
+address {
+  font-style: normal;
+}
+
+/* Abbreviation reset - remove underline on unsupported browsers */
+abbr[title] {
+  text-decoration: underline dotted;
+  cursor: help;
+}
+
+/* Bold elements - use bolder for proper weight inheritance */
+b,
+strong {
+  font-weight: bolder;
+}
+
+/* Small text */
+small {
+  font-size: 0.875em;
+}
+
+/* Subscript and superscript reset - prevent line-height impact */
+sub,
+sup {
+  font-size: 0.75em;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/* Hidden attribute support for older browsers */
+[hidden] {
+  display: none !important;
+}
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

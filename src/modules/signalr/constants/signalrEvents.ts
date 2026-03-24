@@ -1,0 +1,72 @@
+/**
+ * Azure SignalR Service hub name used for token negotiation.
+ */
+export const SIGNALR_HUB_NAME = 'salonadmin' as const
+
+/**
+ * Token lifetime in days passed to the getToken API.
+ */
+export const SIGNALR_TOKEN_LIFETIME = '1' as const
+
+/**
+ * SignalR hub method name that the server calls on the client.
+ * All messages from the hub are routed through this single method.
+ */
+export const SIGNALR_HUB_METHOD = 'SendMessage' as const
+
+/**
+ * SignalR notification event types received from the server.
+ * Values MUST match the exact notiType strings sent by the backend
+ * (case-sensitive). Reference: VueJS/src/config/constant.js → NOTIFICATON_TYPE
+ */
+export const SIGNALR_EVENTS = {
+  // Bookings
+  BOOKINGS_CREATED: 'BOOKINGS_CREATED',
+  BOOKINGS_UPDATED: 'BOOKINGS_UPDATED',
+  BOOKINGS_CANCELLED: 'BOOKINGS_CANCELLED',
+
+  // Blocked time
+  BLOCKED_TIME_CREATED: 'BLOCKED_TIME_CREATED',
+  BLOCKED_TIME_UPDATED: 'BLOCKED_TIME_UPDATED',
+  BLOCKED_TIME_DELETED: 'BLOCKED_TIME_DELETED',
+
+  // Waiting
+  WAITINGS_CREATED: 'WAITINGS_CREATED',
+  WAITINGS_UPDATED: 'WAITINGS_UPDATED',
+  WAITINGS_CHANGED_TO_BOOKINGS: 'WAITINGS_CHANGED_TO_BOOKINGS',
+
+  // Setup
+  SALES_GENERAL_SETUP_UPDATED: 'SALES_GENERAL_SETUP_UPDATED',
+  SHOP_ENVIRONMENT_SETUP_UPDATED: 'SHOP_ENVIRONMENT_SETUP_UPDATED',
+  CLIENT_ENVIRONMENT_SETUP_UPDATED: 'CLIENT_ENVIRONMENT_SETUP_UPDATED',
+  SALES_DATA_PROTECTION_AND_SECURITY_SETUP_UPDATED:
+    'SALES_DATA_PROTECTION_AND_SECURITY_SETUP_UPDATED',
+
+  // Staff
+  STAFF_STATUS_CHANGED: 'STAFF_STATUS_CHANGED',
+
+  // Goods
+  GOODS_CHANGED: 'GOODS_CHANGED',
+  SERVICE_CHANGED: 'SERVICE_CHANGED',
+  PACKAGE_CHANGED: 'PACKAGE_CHANGED',
+  PREPAID_CARD_CHANGED: 'PREPAID_CARD_CHANGED',
+  PREPAID_SERVICE_CHANGED: 'PREPAID_SERVICE_CHANGED',
+  SERVICE_CATEGORY_CHANGED: 'SERVICE_CATEGORY_CHANGED',
+  PRODUCT_CATEGORY_CHANGED: 'PRODUCT_CATEGORY_CHANGED',
+  PRODUCT_INVENTORY_CHANGED: 'PRODUCT_INVENTORY_CHANGED',
+
+  // Authentication
+  LOGOUT_USER_ACCESS: 'LOGOUT_USER_ACCESS',
+
+  // Payment — server sends 'EXTSYSTEM_' (no underscore between EXT and SYSTEM)
+  EXT_SYSTEM_BOOKING_PAYMENT_PAID: 'EXTSYSTEM_BOOKING_PAYMENT_PAID',
+
+  // Loyalty
+  LOYALTY_POINT_CHANGED: 'LOYALTY_POINT_CHANGED',
+
+  // System
+  SYSTEM_NEW_VERSION: 'SYSTEM_NEW_VERSION',
+  SYSTEM_MAINTAIN_MODE: 'SYSTEM_MAINTAIN_MODE',
+} as const
+
+export type SignalREventName = (typeof SIGNALR_EVENTS)[keyof typeof SIGNALR_EVENTS]

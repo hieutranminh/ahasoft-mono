@@ -1,0 +1,442 @@
+// ===============================
+// SCSS MIXINS COLLECTION
+// ===============================
+
+@use 'sass:map';
+@use 'sass:color';
+@use 'sass:string';
+
+// ===============================
+// RESPONSIVE BREAKPOINTS
+// ===============================
+
+$breakpoints: (
+  xs: 480px,
+  sm: 768px,
+  md: 1024px,
+  lg: 1280px,
+  xl: 1440px,
+  xxl: 1920px,
+);
+
+@mixin respond-to($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: map.get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  } @else {
+    @warn "Invalid breakpoint: #{$breakpoint}";
+  }
+}
+
+@mixin respond-below($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (max-width: #{map.get($breakpoints, $breakpoint) - 1px}) {
+      @content;
+    }
+  } @else {
+    @warn "Invalid breakpoint: #{$breakpoint}";
+  }
+}
+
+@mixin respond-between($min, $max) {
+  @if map.has-key($breakpoints, $min) and map.has-key($breakpoints, $max) {
+    @media (min-width: map.get($breakpoints, $min)) and (max-width: #{map.get($breakpoints, $max) - 1px}) {
+      @content;
+    }
+  } @else {
+    @warn "Invalid breakpoint range: #{$min} to #{$max}";
+  }
+}
+
+// ===============================
+// FLEXBOX UTILITIES
+// ===============================
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-column-center {
+  @include flex-column;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin flex-around {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+@mixin flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+// ===============================
+// GRID UTILITIES
+// ===============================
+
+@mixin grid-center {
+  display: grid;
+  place-items: center;
+}
+
+@mixin grid-columns($columns, $gap: 1rem) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+}
+
+@mixin grid-auto-fit($min-width: 250px, $gap: 1rem) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($min-width, 1fr));
+  gap: $gap;
+}
+
+@mixin grid-auto-fill($min-width: 250px, $gap: 1rem) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($min-width, 1fr));
+  gap: $gap;
+}
+
+// ===============================
+// POSITIONING
+// ===============================
+
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin absolute-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin fixed-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin sticky-top($offset: 0) {
+  position: sticky;
+  top: $offset;
+}
+
+// ===============================
+// TYPOGRAPHY
+// ===============================
+
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin text-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin font-size($size, $line-height: null) {
+  font-size: $size;
+  @if $line-height {
+    line-height: $line-height;
+  }
+}
+
+@mixin text-gradient($direction: 45deg, $colors...) {
+  background: linear-gradient($direction, $colors);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ===============================
+// ANIMATIONS & TRANSITIONS
+// ===============================
+
+@mixin transition($properties: all, $duration: 0.3s, $easing: ease) {
+  transition: $properties $duration $easing;
+}
+
+@mixin hover-lift($distance: 5px, $duration: 0.3s) {
+  transition: transform $duration ease;
+
+  &:hover {
+    transform: translateY(-$distance);
+  }
+}
+
+@mixin fade-in($duration: 0.3s, $delay: 0s) {
+  opacity: 0;
+  animation: fadeIn $duration ease forwards $delay;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@mixin slide-in-from($direction: left, $distance: 100px, $duration: 0.5s) {
+  $translate: translateX(-$distance);
+
+  @if $direction == right {
+    $translate: translateX($distance);
+  } @else if $direction == top {
+    $translate: translateY(-$distance);
+  } @else if $direction == bottom {
+    $translate: translateY($distance);
+  }
+
+  transform: $translate;
+  opacity: 0;
+  animation: slideIn#{capitalize($direction)} $duration ease forwards;
+}
+
+@keyframes slideInLeft {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInTop {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInBottom {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// ===============================
+// VISUAL EFFECTS
+// ===============================
+
+@mixin box-shadow($level: 1) {
+  @if $level == 1 {
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.12),
+      0 1px 2px rgba(0, 0, 0, 0.24);
+  } @else if $level == 2 {
+    box-shadow:
+      0 3px 6px rgba(0, 0, 0, 0.16),
+      0 3px 6px rgba(0, 0, 0, 0.23);
+  } @else if $level == 3 {
+    box-shadow:
+      0 10px 20px rgba(0, 0, 0, 0.19),
+      0 6px 6px rgba(0, 0, 0, 0.23);
+  } @else if $level == 4 {
+    box-shadow:
+      0 14px 28px rgba(0, 0, 0, 0.25),
+      0 10px 10px rgba(0, 0, 0, 0.22);
+  } @else if $level == 5 {
+    box-shadow:
+      0 19px 38px rgba(0, 0, 0, 0.3),
+      0 15px 12px rgba(0, 0, 0, 0.22);
+  }
+}
+
+@mixin border-radius($radius: 4px) {
+  border-radius: $radius;
+}
+
+@mixin glass-effect($opacity: 0.1, $blur: 10px) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@mixin gradient-bg($direction: 45deg, $colors...) {
+  background: linear-gradient($direction, $colors);
+}
+
+// ===============================
+// FORM ELEMENTS
+// ===============================
+
+@mixin input-base {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+}
+
+@mixin button-base {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-variant($bg-color, $text-color: white, $hover-bg: null) {
+  @include button-base;
+  background-color: $bg-color;
+  color: $text-color;
+
+  @if $hover-bg {
+    &:hover:not(:disabled) {
+      background-color: $hover-bg;
+    }
+  } @else {
+    &:hover:not(:disabled) {
+      background-color: color.adjust($bg-color, $lightness: -10%);
+    }
+  }
+}
+
+// ===============================
+// UTILITIES
+// ===============================
+
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@mixin aspect-ratio($width, $height) {
+  aspect-ratio: $width / $height;
+}
+
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+@mixin circle($size) {
+  @include size($size);
+  border-radius: 50%;
+}
+
+@mixin square($size) {
+  @include size($size);
+}
+
+// ===============================
+// SCROLL UTILITIES
+// ===============================
+
+@mixin scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+@mixin hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@mixin custom-scrollbar($thumb-color: #888, $track-color: #f1f1f1, $width: 8px) {
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+    border-radius: $width / 2;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+    border-radius: $width / 2;
+
+    &:hover {
+      background: color.adjust($thumb-color, $lightness: -10%);
+    }
+  }
+}
+
+// ===============================
+// HELPER FUNCTIONS
+// ===============================
+
+@function rem($pixels) {
+  @return ($pixels / 16px) * 1rem;
+}
+
+@function em($pixels, $context: 16px) {
+  @return ($pixels / $context) * 1em;
+}
+
+// Capitalize first letter (used in animations)
+@function capitalize($string) {
+  @return string.to-upper-case(string.slice($string, 1, 1)) + string.slice($string, 2);
+}

@@ -1,0 +1,165 @@
+---
+alwaysApply: true
+---
+
+# PrimeVue LLMs Documentation Reference
+
+This project uses PrimeVue v4. When working with PrimeVue components, use the official LLM-optimized documentation.
+
+## Documentation Endpoints
+
+| Endpoint                                            | Description                                       |
+| --------------------------------------------------- | ------------------------------------------------- |
+| https://primevue.org/llms/llms.txt                  | Structured list of key documentation pages        |
+| https://primevue.org/llms/llms-full.txt             | Complete list of all PrimeVue documentation pages |
+| https://primevue.org/llms/components/{component}.md | Markdown documentation for specific component     |
+
+## Component Documentation URLs
+
+When you need detailed information about a PrimeVue component, access its Markdown documentation:
+
+### Form Components
+
+- DatePicker: https://primevue.org/llms/components/datepicker.md
+- AutoComplete: https://primevue.org/llms/components/autocomplete.md
+- Checkbox: https://primevue.org/llms/components/checkbox.md
+- InputText: https://primevue.org/llms/components/inputtext.md
+- InputNumber: https://primevue.org/llms/components/inputnumber.md
+- Select: https://primevue.org/llms/components/select.md
+- MultiSelect: https://primevue.org/llms/components/multiselect.md
+- Textarea: https://primevue.org/llms/components/textarea.md
+- Password: https://primevue.org/llms/components/password.md
+- RadioButton: https://primevue.org/llms/components/radiobutton.md
+- ToggleSwitch: https://primevue.org/llms/components/toggleswitch.md
+- Slider: https://primevue.org/llms/components/slider.md
+- Rating: https://primevue.org/llms/components/rating.md
+- ColorPicker: https://primevue.org/llms/components/colorpicker.md
+- Listbox: https://primevue.org/llms/components/listbox.md
+- TreeSelect: https://primevue.org/llms/components/treeselect.md
+- CascadeSelect: https://primevue.org/llms/components/cascadeselect.md
+- InputMask: https://primevue.org/llms/components/inputmask.md
+- InputOtp: https://primevue.org/llms/components/inputotp.md
+- Knob: https://primevue.org/llms/components/knob.md
+- Editor: https://primevue.org/llms/components/editor.md
+- FloatLabel: https://primevue.org/llms/components/floatlabel.md
+- IftaLabel: https://primevue.org/llms/components/iftalabel.md
+- IconField: https://primevue.org/llms/components/iconfield.md
+- InputGroup: https://primevue.org/llms/components/inputgroup.md
+- KeyFilter: https://primevue.org/llms/components/keyfilter.md
+- SelectButton: https://primevue.org/llms/components/selectbutton.md
+- ToggleButton: https://primevue.org/llms/components/togglebutton.md
+
+### Button Components
+
+- Button: https://primevue.org/llms/components/button.md
+- SpeedDial: https://primevue.org/llms/components/speeddial.md
+- SplitButton: https://primevue.org/llms/components/splitbutton.md
+
+### Data Components
+
+- DataTable: https://primevue.org/llms/components/datatable.md
+- DataView: https://primevue.org/llms/components/dataview.md
+- Paginator: https://primevue.org/llms/components/paginator.md
+- Tree: https://primevue.org/llms/components/tree.md
+- TreeTable: https://primevue.org/llms/components/treetable.md
+- Timeline: https://primevue.org/llms/components/timeline.md
+- VirtualScroller: https://primevue.org/llms/components/virtualscroller.md
+- OrderList: https://primevue.org/llms/components/orderlist.md
+- PickList: https://primevue.org/llms/components/picklist.md
+- OrgChart: https://primevue.org/llms/components/orgchart.md
+
+### Panel Components
+
+- Accordion: https://primevue.org/llms/components/accordion.md
+- Card: https://primevue.org/llms/components/card.md
+- Tabs: https://primevue.org/llms/components/tabs.md
+- Panel: https://primevue.org/llms/components/panel.md
+- Fieldset: https://primevue.org/llms/components/fieldset.md
+- Divider: https://primevue.org/llms/components/divider.md
+- Splitter: https://primevue.org/llms/components/splitter.md
+- Toolbar: https://primevue.org/llms/components/toolbar.md
+- ScrollPanel: https://primevue.org/llms/components/scrollpanel.md
+- Stepper: https://primevue.org/llms/components/stepper.md
+- Deferred: https://primevue.org/llms/components/deferred.md
+
+### Overlay Components
+
+- Dialog: https://primevue.org/llms/components/dialog.md
+- Drawer: https://primevue.org/llms/components/drawer.md
+- ConfirmDialog: https://primevue.org/llms/components/confirmdialog.md
+- ConfirmPopup: https://primevue.org/llms/components/confirmpopup.md
+- Popover: https://primevue.org/llms/components/popover.md
+- Tooltip: https://primevue.org/llms/components/tooltip.md
+- DynamicDialog: https://primevue.org/llms/components/dynamicdialog.md
+
+### Menu Components
+
+- Menu: https://primevue.org/llms/components/menu.md
+- Menubar: https://primevue.org/llms/components/menubar.md
+- Breadcrumb: https://primevue.org/llms/components/breadcrumb.md
+- ContextMenu: https://primevue.org/llms/components/contextmenu.md
+- TieredMenu: https://primevue.org/llms/components/tieredmenu.md
+- MegaMenu: https://primevue.org/llms/components/megamenu.md
+- PanelMenu: https://primevue.org/llms/components/panelmenu.md
+- Dock: https://primevue.org/llms/components/dock.md
+
+### Message Components
+
+- Toast: https://primevue.org/llms/components/toast.md
+- Message: https://primevue.org/llms/components/message.md
+
+### Media Components
+
+- Image: https://primevue.org/llms/components/image.md
+- Carousel: https://primevue.org/llms/components/carousel.md
+- Galleria: https://primevue.org/llms/components/galleria.md
+- ImageCompare: https://primevue.org/llms/components/imagecompare.md
+
+### Misc Components
+
+- Avatar: https://primevue.org/llms/components/avatar.md
+- Badge: https://primevue.org/llms/components/badge.md
+- Tag: https://primevue.org/llms/components/tag.md
+- Chip: https://primevue.org/llms/components/chip.md
+- ProgressBar: https://primevue.org/llms/components/progressbar.md
+- ProgressSpinner: https://primevue.org/llms/components/progressspinner.md
+- Skeleton: https://primevue.org/llms/components/skeleton.md
+- BlockUI: https://primevue.org/llms/components/blockui.md
+- Inplace: https://primevue.org/llms/components/inplace.md
+- MeterGroup: https://primevue.org/llms/components/metergroup.md
+- ScrollTop: https://primevue.org/llms/components/scrolltop.md
+- Terminal: https://primevue.org/llms/components/terminal.md
+- Fluid: https://primevue.org/llms/components/fluid.md
+
+### Directives
+
+- Ripple: https://primevue.org/llms/components/ripple.md
+- StyleClass: https://primevue.org/llms/components/styleclass.md
+- FocusTrap: https://primevue.org/llms/components/focustrap.md
+- AnimateOnScroll: https://primevue.org/llms/components/animateonscroll.md
+
+### File Upload
+
+- FileUpload: https://primevue.org/llms/components/fileupload.md
+
+### Chart
+
+- Chart: https://primevue.org/llms/components/chart.md
+
+## Usage Guidelines
+
+1. **Before implementing a PrimeVue component**: Check the component's `.md` documentation for correct props, events, and usage patterns.
+
+2. **When troubleshooting**: Reference the official documentation to verify correct API usage.
+
+3. **For theming**: See https://primevue.org/llms/components/theming.md
+
+4. **For Pass Through (PT)**: See https://primevue.org/llms/components/passthrough.md
+
+## Example
+
+When working with DatePicker component in this project, reference:
+
+- Official docs: https://primevue.org/llms/components/datepicker.md
+- Project wrapper: [DatePickerField.vue](mdc:src/components/common/DatePickerField.vue)
+- Date format constants: [dateFormat.ts](mdc:src/constants/dateFormat.ts)
