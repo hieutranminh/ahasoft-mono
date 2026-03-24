@@ -56,6 +56,9 @@ interface ImportMetaEnv {
 
   // PWA Configuration
   readonly VITE_ENABLE_PWA?: string
+
+  // Legacy App Integration
+  readonly VITE_LEGACY_APP_URL?: string
 }
 
 interface ImportMeta {

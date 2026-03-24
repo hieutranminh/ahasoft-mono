@@ -6,8 +6,7 @@ export const CALENDAR_ROUTE_NAMES = {
   BOOKING_DETAIL: 'booking-detail',
 } as const
 
-export type CalendarRouteNameType =
-  (typeof CALENDAR_ROUTE_NAMES)[keyof typeof CALENDAR_ROUTE_NAMES]
+export type CalendarRouteNameType = (typeof CALENDAR_ROUTE_NAMES)[keyof typeof CALENDAR_ROUTE_NAMES]
 
 export const calendarRoutes: RouteRecordRaw[] = [
   {

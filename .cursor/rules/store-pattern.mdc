@@ -1,0 +1,87 @@
+---
+alwaysApply: false
+globs:
+  - src/stores/**
+  - src/modules/*/stores/**
+---
+
+# Pinia Store Pattern
+
+This project uses **Pinia setup stores** (Composition API syntax) exclusively.
+
+## Store Location
+
+- **Global stores** — `src/stores/` (auth, loading, shop)
+- **Module stores** — `src/modules/<name>/stores/` (calendarStore, bookingStore, signalRStore)
+
+## Store Structure
+
+All stores follow this pattern:
+
+```typescript
+import { computed, ref } from 'vue'
+import { defineStore } from 'pinia'
+
+export const useBookingStore = defineStore('booking', () => {
+  // ---- State ----
+  const items = ref<Booking[]>([])
+  const loading = ref(false)
+  const selectedId = ref<number | null>(null)
+
+  // ---- Getters (computed) ----
+  const selectedItem = computed((): Booking | undefined =>
+    items.value.find((item) => item.bookingId === selectedId.value)
+  )
+
+  // ---- Actions (functions) ----
+  async function fetchList(params: BookingListParams): Promise<void> {
+    loading.value = true
+    try {
+      const response = await bookingApi.getList(params)
+      if (response.isOK && response.result) {
+        items.value = response.result.data
+      }
+    } finally {
+      loading.value = false
+    }
+  }
+
+  function reset(): void {
+    items.value = []
+    selectedId.value = null
+  }
+
+  // ---- Public API ----
+  return {
+    // State
+    items,
+    loading,
+    selectedId,
+
+    // Getters
+    selectedItem,
+
+    // Actions
+    fetchList,
+    reset,
+  }
+})
+```
+
+## Naming Conventions
+
+- Store file: `<name>Store.ts` (e.g. `bookingStore.ts`, `calendarStore.ts`)
+- Store composable: `use<Name>Store` (e.g. `useBookingStore`, `useCalendarStore`)
+- Store id: `<name>` lowercase (e.g. `'booking'`, `'calendar'`)
+
+## Rules
+
+- **ALWAYS** use setup store syntax (`defineStore('id', () => { ... })`) — no Options API stores
+- **ALWAYS** use `ref()` for state, `computed()` for getters, plain functions for actions
+- **ALWAYS** explicitly type `ref<Type>()` for non-primitive state
+- **ALWAYS** return all public state, getters, and actions in the return object
+- **ALWAYS** group the return object by: State, Getters, Actions
+- **ALWAYS** handle API response with `response.isOK` check before updating state
+- **ALWAYS** use try/finally for loading state management
+- **DO NOT** use Options API store syntax (`{ state, getters, actions }`)
+- **DO NOT** access `sessionStorage`/`localStorage` directly in stores except for `auth` store — use utility functions from `src/utils/storage` when available

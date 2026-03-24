@@ -1,0 +1,127 @@
+---
+alwaysApply: false
+globs:
+  - src/**/*Form*.vue
+  - src/**/*Field*.vue
+  - src/**/schemas/**
+  - src/schemas/**
+---
+
+# Form Validation Pattern
+
+This project uses **vee-validate + Yup** with custom form field wrapper components.
+
+## Form Field Components
+
+Located in `src/components/common/form/`. All are auto-imported.
+
+| Component | PrimeVue Base | Purpose |
+|---|---|---|
+| `BaseField` | — | Layout wrapper (label, error, help text, aria) |
+| `InputTextField` | `InputText` | Text input |
+| `InputNumberField` | `InputNumber` | Number input |
+| `InputMaskField` | `InputMask` | Masked input |
+| `PasswordField` | `Password` | Password input |
+| `TextareaField` | `Textarea` | Multiline text |
+| `SelectField` | `Select` | Dropdown select |
+| `MultiSelectField` | `MultiSelect` | Multi-select |
+| `CheckboxField` | `Checkbox` | Checkbox |
+| `RadioField` | `RadioButton` | Radio button |
+| `ToggleSwitchField` | `ToggleSwitch` | Toggle switch |
+| `DatePickerField` | `DatePicker` | Date picker |
+| `EditorField` | `Editor` | Rich text editor |
+
+## Field Component Props Pattern
+
+All field wrappers share a common interface:
+
+```typescript
+interface Props {
+  modelValue?: FieldValueType  // v-model value
+  name: string                 // Field name (used as id + form binding)
+  label?: string               // Label text
+  placeholder?: string         // Placeholder text
+  helpText?: string            // Help text below field
+  error?: string | null        // Validation error message
+  disabled?: boolean
+  readonly?: boolean
+  required?: boolean           // Shows * indicator on label
+  size?: FieldSize             // 'small' | 'large' | undefined
+}
+```
+
+## Usage Pattern
+
+Field wrappers handle layout, error display, and accessibility. Pass error from Yup validation:
+
+```vue
+<template>
+  <form @submit.prevent="handleSubmit">
+    <InputTextField
+      v-model="form.userID"
+      name="userID"
+      :label="t('login.userId')"
+      :error="errors.userID"
+      required
+    />
+    <PasswordField
+      v-model="form.password"
+      name="password"
+      :label="t('login.password')"
+      :error="errors.password"
+      required
+    />
+    <Button type="submit" :label="t('login.submit')" />
+  </form>
+</template>
+```
+
+## Yup Schema Pattern
+
+### Shared schemas in `src/schemas/`
+
+```typescript
+import * as Yup from 'yup'
+
+export const loginSchema = Yup.object({
+  userID: Yup.string()
+    .trim()
+    .required('User ID is required')
+    .min(3, 'User ID must be at least 3 characters'),
+  password: Yup.string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters'),
+})
+```
+
+### Module-specific schemas in `src/modules/<name>/schemas/`
+
+### Reusable validation test functions in `src/schemas/rules.ts`
+
+```typescript
+// Usage: Yup.string().test('strong-password', 'Error message', isStrongPassword)
+export function isStrongPassword(value: string | undefined): boolean { ... }
+export function isValidPhone(value: string | undefined): boolean { ... }
+```
+
+### Error extraction utility in `src/schemas/rules.ts`
+
+```typescript
+import { extractYupErrors } from '@/schemas/rules'
+
+try {
+  await schema.validate(formData, { abortEarly: false })
+} catch (error) {
+  const { fieldErrors } = extractYupErrors(error)
+  // fieldErrors = { userID: 'User ID is required', password: '...' }
+}
+```
+
+## Rules
+
+- **ALWAYS** use the `*Field` wrapper components instead of raw PrimeVue inputs in forms
+- **ALWAYS** use `BaseField` as the layout wrapper when creating new field components
+- Pass `error` prop from Yup validation to display error messages
+- Use `extractYupErrors()` to convert Yup errors into a `Record<string, string>` for field binding
+- Schema files use `Yup.object({...})` pattern — import Yup as `import * as Yup from 'yup'`
+- Shared rules go in `src/schemas/rules.ts`, module-specific schemas go in `src/modules/<name>/schemas/`

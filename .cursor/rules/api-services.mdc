@@ -1,0 +1,91 @@
+---
+alwaysApply: true
+---
+
+# API & CQRS Gateway Pattern
+
+This project uses a CQRS (Command Query Responsibility Segregation) gateway pattern for all API calls.
+
+## Gateway URL Structure
+
+```
+/api/{type}/v{version}/{serviceName}/{endpoint}
+```
+
+Where `type` is: `read` (queries), `cmd` (mutations), `aggr` (aggregations).
+
+## Core Components
+
+- **`src/api/axios.ts`** — Axios instance with baseURL, timeout, interceptors
+- **`src/api/url-builder.ts`** — Type-safe URL builders: `readUrl()`, `cmdUrl()`, `aggrUrl()`
+- **`src/api/services/base.ts`** — `gatewayService` object with `read`, `command`, `commandPut`, `commandDelete`, `aggregate` methods
+- **`src/config/services.ts`** — Service definitions (`ServiceConfig` objects with name + API versions)
+
+## Service Config Pattern
+
+Services are defined as typed constants in `src/config/services.ts`:
+
+```typescript
+export const BOOKINGS_SERVICE: ServiceConfig = {
+  name: 'bookings',
+  api: { readVersion: 1, cmdVersion: 1 },
+} as const
+```
+
+Three config types exist based on service capabilities:
+
+- `ServiceConfig` — supports both read and cmd
+- `ServiceReadOnlyConfig` — read only (e.g. `BOOKINGS_BKG_TASKS_SERVICE`)
+- `ServiceCmdOnlyConfig` — cmd only (e.g. `MESSAGE_AUTOS_SERVICE`)
+
+## API Response Format
+
+All API responses follow this structure:
+
+```typescript
+interface ApiResponse<T = unknown> {
+  result: T | null
+  errorMessages: ApiErrorMessage[]
+  isOK: boolean
+}
+```
+
+Always check `response.isOK` and `response.result` before using data.
+
+## Writing API Service Files
+
+API service files live in `src/api/services/` (global) or `src/modules/<name>/api/` (module-specific).
+
+**Pattern:**
+
+```typescript
+import { BOOKINGS_SERVICE } from '@/config/services'
+
+import type { ApiResponse } from '@/types/api'
+import type { Booking, BookingCreatePayload, BookingListParams, BookingListResult } from '../types/booking'
+
+import { gatewayService } from '@/api/services/base'
+
+export const bookingApi = {
+  async getList(params: BookingListParams): Promise<ApiResponse<BookingListResult>> {
+    return gatewayService.read<BookingListResult>(BOOKINGS_SERVICE, 'Booking/List', params)
+  },
+
+  async create(payload: BookingCreatePayload): Promise<ApiResponse<Booking>> {
+    return gatewayService.command<Booking>(BOOKINGS_SERVICE, 'Booking/Create', payload)
+  },
+}
+```
+
+## Rules
+
+- **DO NOT** use `axios` or `apiClient` directly — always use `gatewayService` methods
+- **DO NOT** hardcode API URLs — use `ServiceConfig` constants + endpoint strings
+- Use `gatewayService.read()` for queries (GET-like operations sent as POST)
+- Use `gatewayService.command()` for mutations (create, update)
+- Use `gatewayService.commandPut()` for PUT mutations
+- Use `gatewayService.commandDelete()` for DELETE mutations
+- Use `gatewayService.aggregate()` for cross-service aggregation endpoints
+- API service objects use plain object literal pattern (not classes)
+- All methods must have explicit return type `Promise<ApiResponse<T>>`
+- Use `ApiRequestConfig` for optional config: `skipAuth`, `skipLoading`, `skipAuthRedirect`

@@ -1,0 +1,88 @@
+---
+alwaysApply: true
+---
+
+# Project Architecture
+
+Vue 3 + TypeScript + Vite SPA for a salon/beauty shop management system with CQRS microservices backend.
+
+## Tech Stack
+
+- **Vue 3** with Composition API (`<script setup lang="ts">`) — no Options API
+- **PrimeVue 4** — UI components (auto-imported, DO NOT import manually)
+- **Pinia** — state management (setup stores only)
+- **Vue Router 4** — routing with auth/permission guards
+- **vue-i18n** — internationalization (en, ko, vi; default: ko)
+- **vee-validate + Yup** — form validation
+- **Axios** — HTTP via CQRS gateway pattern
+- **SignalR** — real-time notifications
+- **SCSS** — styling (no Tailwind)
+- **Vitest** — testing
+
+## Directory Structure
+
+```
+src/
+├── api/                  # Axios instance, CQRS gateway, interceptors
+│   ├── axios.ts          # Axios instance creation
+│   ├── url-builder.ts    # CQRS URL builder (readUrl, cmdUrl, aggrUrl)
+│   ├── services/         # Domain API services (authApi, adminsApi...)
+│   └── interceptors/     # Request/response interceptors, token refresh
+├── assets/               # SCSS, CSS, images
+├── components/
+│   ├── common/           # Reusable components (form fields, AppDataTable, AppEmpty...)
+│   │   └── form/         # vee-validate field wrappers (BaseField, InputTextField...)
+│   └── layouts/          # MainLayout, AuthLayout, AppHeader, AppFooter
+├── composables/          # App-level composables (useAlert, useDataTable, useI18n...)
+├── config/
+│   ├── app.ts            # Merged app config (envConfig + static)
+│   ├── env.ts            # Environment variables with validation
+│   └── services.ts       # CQRS service definitions (ServiceConfig objects)
+├── constants/            # Route names, roles, auth keys, date formats
+├── locales/              # i18n message files (en.ts, ko.ts, vi.ts)
+├── modules/              # Feature modules (see Module Pattern below)
+├── plugins/              # Vue plugin setup (Pinia, Router, i18n, PrimeVue, error handler)
+├── schemas/              # Shared Yup schemas and validation rules
+├── stores/               # Global Pinia stores (auth, loading, shop)
+├── types/                # Shared TypeScript types
+├── utils/                # Utility functions (date, color, storage)
+└── views/                # Top-level views (auth pages, home, 404)
+```
+
+## Module Pattern
+
+Feature modules live in `src/modules/<name>/` with this structure:
+
+```
+src/modules/<name>/
+├── index.ts              # Public API — exports only what other modules need
+├── routes.ts             # Route definitions with module-scoped route name constants
+├── views/                # Page-level components (lazy-loaded in routes)
+├── components/           # Module-specific UI components
+├── composables/          # Module-specific composables
+├── stores/               # Module-specific Pinia stores
+├── api/                  # Module-specific API service objects
+├── schemas/              # Module-specific Yup validation schemas
+├── types/                # Module-specific TypeScript types
+└── constants/            # Module-specific constants
+```
+
+**Rules:**
+
+- Each module's `index.ts` is the public API boundary — other modules import ONLY from `@/modules/<name>` (the index), never from internal paths
+- Routes are registered in `src/router/index.ts` by spreading into the main layout children
+- Module route names are defined as `const` objects with `as const` assertion in `routes.ts`
+
+## Layout Pattern
+
+- **MainLayout** (`/`) — requires auth, wraps all authenticated pages via `RouterView`
+- **AuthLayout** — wraps login/forgot-password/reset-password pages
+- `App.vue` — global providers: `Toast`, `ConfirmDialog`, `AppErrorDialog`, `AppGlobalLoading`, `AppPwaUpdate`
+
+## Key Patterns
+
+1. **CQRS Gateway API** — see [api-services.mdc](mdc:.cursor/rules/api-services.mdc)
+2. **Form Validation** — see [form-validation.mdc](mdc:.cursor/rules/form-validation.mdc)
+3. **Store Pattern** — see [store-pattern.mdc](mdc:.cursor/rules/store-pattern.mdc)
+4. **i18n** — see [i18n-guidelines.mdc](mdc:.cursor/rules/i18n-guidelines.mdc)
+5. **Auto-imports** — see [vue-auto-imports.mdc](mdc:.cursor/rules/vue-auto-imports.mdc)

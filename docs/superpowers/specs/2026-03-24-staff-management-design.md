@@ -20,19 +20,19 @@
 
 ## 3. Files to change (descriptions only)
 
-| Area | Action |
-|------|--------|
-| `src/modules/staff/routes.ts` | Define `STAFF_ROUTE_NAMES`, nested routes (list, create, detail, edit), `meta.title` / `module: 'staff'`. |
-| `src/modules/staff/views/*.vue` | `StaffView` (outlet), `StaffList`, `StaffCreate`, `StaffDetail`, `StaffEdit` — follow admin view responsibilities. |
-| `src/modules/staff/api/staffApi.ts` | Async functions `getList`, `getById`, `create`, `update` returning shapes compatible with future gateway replacement; in-memory array + optional small delay. |
-| `src/modules/staff/types/staff.ts` | `Staff` interface and related types (status enum, payloads). |
-| `src/modules/staff/schemas/staffSchema.ts` | Yup schema(s) for create/edit. |
-| `src/modules/staff/index.ts` | Export public types / route names if other modules need them. |
-| `src/router/index.ts` | Import and spread `staffRoutes` alongside `adminRoutes`. |
-| `src/components/layouts/AppHeader.vue` or `src/views/Home/HomeView.vue` | Add navigation link to staff list (minimal). |
-| `src/locales/en.ts`, `vi.ts`, `ko.ts` | Add `staff.*` strings for titles, labels, validation messages, table headers. |
+| Area                                                                    | Action                                                                                                                                                        |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/modules/staff/routes.ts`                                           | Define `STAFF_ROUTE_NAMES`, nested routes (list, create, detail, edit), `meta.title` / `module: 'staff'`.                                                     |
+| `src/modules/staff/views/*.vue`                                         | `StaffView` (outlet), `StaffList`, `StaffCreate`, `StaffDetail`, `StaffEdit` — follow admin view responsibilities.                                            |
+| `src/modules/staff/api/staffApi.ts`                                     | Async functions `getList`, `getById`, `create`, `update` returning shapes compatible with future gateway replacement; in-memory array + optional small delay. |
+| `src/modules/staff/types/staff.ts`                                      | `Staff` interface and related types (status enum, payloads).                                                                                                  |
+| `src/modules/staff/schemas/staffSchema.ts`                              | Yup schema(s) for create/edit.                                                                                                                                |
+| `src/modules/staff/index.ts`                                            | Export public types / route names if other modules need them.                                                                                                 |
+| `src/router/index.ts`                                                   | Import and spread `staffRoutes` alongside `adminRoutes`.                                                                                                      |
+| `src/components/layouts/AppHeader.vue` or `src/views/Home/HomeView.vue` | Add navigation link to staff list (minimal).                                                                                                                  |
+| `src/locales/en.ts`, `vi.ts`, `ko.ts`                                   | Add `staff.*` strings for titles, labels, validation messages, table headers.                                                                                 |
 
-*Exact filenames may follow existing module conventions if they differ slightly (e.g. composables only if shared logic emerges).*
+_Exact filenames may follow existing module conventions if they differ slightly (e.g. composables only if shared logic emerges)._
 
 ## 4. Task checklist
 

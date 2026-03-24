@@ -14,24 +14,24 @@
 
 ## File map (create / modify)
 
-| File | Responsibility |
-|------|----------------|
-| `src/modules/staff/types/staff.ts` | `Staff`, `StaffStatus`, create/update payload types, `StaffListItem` if distinct |
-| `src/modules/staff/api/staffApi.ts` | Mock `getList`, `getById`, `create`, `update`; in-memory state; `throw new Error(...)` for unknown id |
-| `src/modules/staff/api/staffApi.test.ts` | Vitest: list after create, getById throws when missing |
-| `src/modules/staff/schemas/staffSchema.ts` | Yup object for create/edit (align field names with `Staff`) |
-| `src/modules/staff/routes.ts` | `STAFF_ROUTE_NAMES`, `StaffRouteNameType`, `staffRoutes` (mirror `admin/routes.ts` order: `''`, `create`, `:id`, `:id/edit`) |
-| `src/modules/staff/views/StaffView.vue` | Layout shell with `<RouterView />` only |
-| `src/modules/staff/views/StaffList.vue` | DataTable, links to detail/create, optional client filter |
-| `src/modules/staff/views/StaffDetail.vue` | Read-only fields, button to edit (`useRouter` + `STAFF_ROUTE_NAMES`) |
-| `src/modules/staff/views/StaffCreate.vue` | Form + submit → `create` → navigate to detail |
-| `src/modules/staff/views/StaffEdit.vue` | Load by route `id`, form + `update` → navigate to detail or stay |
-| `src/modules/staff/index.ts` | Re-export `STAFF_ROUTE_NAMES`, `StaffRouteNameType` |
-| `src/router/index.ts` | `import { staffRoutes } from '@/modules/staff/routes'` and `...staffRoutes` in authenticated children |
-| `src/components/layouts/AppHeader.vue` | `RouterLink` to `staff-list` (or `Button` + `@click` with `router.push`) |
-| `src/locales/en.ts` | Nested `staff: { ... }` keys |
-| `src/locales/vi.ts` | Same structure |
-| `src/locales/ko.ts` | Same structure |
+| File                                       | Responsibility                                                                                                               |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| `src/modules/staff/types/staff.ts`         | `Staff`, `StaffStatus`, create/update payload types, `StaffListItem` if distinct                                             |
+| `src/modules/staff/api/staffApi.ts`        | Mock `getList`, `getById`, `create`, `update`; in-memory state; `throw new Error(...)` for unknown id                        |
+| `src/modules/staff/api/staffApi.test.ts`   | Vitest: list after create, getById throws when missing                                                                       |
+| `src/modules/staff/schemas/staffSchema.ts` | Yup object for create/edit (align field names with `Staff`)                                                                  |
+| `src/modules/staff/routes.ts`              | `STAFF_ROUTE_NAMES`, `StaffRouteNameType`, `staffRoutes` (mirror `admin/routes.ts` order: `''`, `create`, `:id`, `:id/edit`) |
+| `src/modules/staff/views/StaffView.vue`    | Layout shell with `<RouterView />` only                                                                                      |
+| `src/modules/staff/views/StaffList.vue`    | DataTable, links to detail/create, optional client filter                                                                    |
+| `src/modules/staff/views/StaffDetail.vue`  | Read-only fields, button to edit (`useRouter` + `STAFF_ROUTE_NAMES`)                                                         |
+| `src/modules/staff/views/StaffCreate.vue`  | Form + submit → `create` → navigate to detail                                                                                |
+| `src/modules/staff/views/StaffEdit.vue`    | Load by route `id`, form + `update` → navigate to detail or stay                                                             |
+| `src/modules/staff/index.ts`               | Re-export `STAFF_ROUTE_NAMES`, `StaffRouteNameType`                                                                          |
+| `src/router/index.ts`                      | `import { staffRoutes } from '@/modules/staff/routes'` and `...staffRoutes` in authenticated children                        |
+| `src/components/layouts/AppHeader.vue`     | `RouterLink` to `staff-list` (or `Button` + `@click` with `router.push`)                                                     |
+| `src/locales/en.ts`                        | Nested `staff: { ... }` keys                                                                                                 |
+| `src/locales/vi.ts`                        | Same structure                                                                                                               |
+| `src/locales/ko.ts`                        | Same structure                                                                                                               |
 
 **Note:** `useRouterNavigation().navigateTo()` is typed to `RouteNameType` from `src/constants/routeNames.ts` (global routes only). For staff routes, use `useRouter()` from `vue-router` with `{ name: STAFF_ROUTE_NAMES.STAFF_LIST, ... }` and `import type { StaffRouteNameType }` where a name union is needed.
 
@@ -40,6 +40,7 @@
 ### Task 1: Types and mock API
 
 **Files:**
+
 - Create: `src/modules/staff/types/staff.ts`
 - Create: `src/modules/staff/api/staffApi.ts`
 
@@ -56,6 +57,7 @@
 ### Task 2: Unit tests for staffApi
 
 **Files:**
+
 - Create: `src/modules/staff/api/staffApi.test.ts`
 
 - [ ] **Step 2.1:** Import `staffApi` and test that `getList()` returns seed length ≥ 1.
@@ -72,6 +74,7 @@
 ### Task 3: Routes and shell view
 
 **Files:**
+
 - Create: `src/modules/staff/routes.ts`
 - Create: `src/modules/staff/views/StaffView.vue`
 - Create: `src/modules/staff/index.ts`
@@ -91,6 +94,7 @@
 ### Task 4: i18n strings (staff namespace)
 
 **Files:**
+
 - Modify: `src/locales/en.ts`, `src/locales/vi.ts`, `src/locales/ko.ts`
 
 - [ ] **Step 4.1:** Add `staff` object with keys for: page titles (list, create, detail, edit), table columns, form labels, status labels, `notFound`, `loadError`, actions (`addStaff`, `viewDetail`).
@@ -105,6 +109,7 @@
 ### Task 5: Yup schema
 
 **Files:**
+
 - Create: `src/modules/staff/schemas/staffSchema.ts`
 
 - [ ] **Step 5.1:** Export `staffFormSchema` using `yup` with required fields matching `Staff` (except `id`). Use `validation.*` from locales where possible via labels, or inline messages keyed later.
@@ -119,6 +124,7 @@
 ### Task 6: Staff list page
 
 **Files:**
+
 - Create: `src/modules/staff/views/StaffList.vue`
 
 - [ ] **Step 6.1:** On mount, `await staffApi.getList()` into `ref`; handle errors with `useAlert` or project-standard toast (check `useAlert` / plugin pattern in codebase).
@@ -135,6 +141,7 @@
 ### Task 7: Staff detail page
 
 **Files:**
+
 - Create: `src/modules/staff/views/StaffDetail.vue`
 
 - [ ] **Step 7.1:** `const route = useRoute(); const id = computed(() => route.params.id as string)` (adjust type if numeric).
@@ -148,6 +155,7 @@
 ### Task 8: Staff create and edit (forms)
 
 **Files:**
+
 - Create: `src/modules/staff/views/StaffCreate.vue`
 - Create: `src/modules/staff/views/StaffEdit.vue`
 - Optional: `src/modules/staff/components/StaffFormFields.vue` if duplication is high
@@ -166,6 +174,7 @@
 ### Task 9: Navigation entry
 
 **Files:**
+
 - Modify: `src/components/layouts/AppHeader.vue`
 
 - [ ] **Step 9.1:** Add a `RouterLink` (or PrimeVue `Button` + `router.push`) next to the title area: label from `staff.nav` or `menu.staff` i18n key; target `name: STAFF_ROUTE_NAMES.STAFF_LIST`.

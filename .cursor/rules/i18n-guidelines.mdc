@@ -1,0 +1,47 @@
+---
+alwaysApply: false
+globs:
+  - src/**/*.vue
+  - src/locales/**
+---
+
+# Internationalization (i18n) Guidelines
+
+This project uses **vue-i18n** with 3 locales: `en`, `ko`, `vi`. Default locale is `ko`.
+
+## Configuration
+
+- Locale files: `src/locales/en.ts`, `src/locales/ko.ts`, `src/locales/vi.ts`
+- Plugin setup: `src/plugins/i18n.ts`
+- Composable: `src/composables/useI18n.ts` (wraps vue-i18n with locale persistence)
+- Type: `Locale = 'en' | 'vi' | 'ko'`
+
+## Usage in Components
+
+```vue
+<template>
+  <h1>{{ t('page.title') }}</h1>
+  <InputTextField
+    v-model="form.name"
+    name="name"
+    :label="t('form.name')"
+    :placeholder="t('form.namePlaceholder')"
+  />
+  <Button :label="t('common.save')" />
+</template>
+
+<script setup lang="ts">
+import { useI18n } from '@/composables/useI18n'
+
+const { t } = useI18n()
+</script>
+```
+
+## Rules
+
+- **DO NOT** hardcode user-facing text in templates — use `t('key')` or `$t('key')`
+- **DO NOT** use `useI18n` from `vue-i18n` directly — use `@/composables/useI18n` which adds locale persistence
+- Technical attributes (`class`, `name`, `id`, `type`, `to`, `icon`) do NOT need translation
+- PrimeVue prop values that display text (`label`, `placeholder`, `header`) MUST use `t()`
+- When adding new text, add the translation key to ALL 3 locale files (en, ko, vi)
+- Use nested keys for organization: `module.section.key` (e.g. `calendar.booking.title`)

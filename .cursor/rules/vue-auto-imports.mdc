@@ -33,7 +33,11 @@ All components from `src/components` directory are **automatically imported**:
 
 ### 3. PrimeVue Components
 
-See [primevue-auto-import.mdc](mdc:.cursor/rules/primevue-auto-import.mdc) for PrimeVue component auto-import rules.
+All PrimeVue components are **automatically imported** via `PrimeVueResolver()` in `vite.config.ts`.
+
+Common examples: `Button`, `InputText`, `Dialog`, `DataTable`, `Select`, `DatePicker`, `Toast`, `Message`, `Card`, `Tabs`, `Menu`, `Drawer`, etc.
+
+**DO NOT** manually import PrimeVue components. See [primevue-llms-docs.mdc](mdc:.cursor/rules/primevue-llms-docs.mdc) for PrimeVue documentation reference.
 
 ## NOT Auto-Imported (Require Manual Imports)
 
