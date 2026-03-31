@@ -39,6 +39,7 @@
 | Form Validation  | VeeValidate + Yup                           |
 | i18n             | vue-i18n (en, vi, ko)                       |
 | HTTP Client      | Axios (with CQRS gateway)                   |
+| Real-time        | SignalR (@microsoft/signalr)                |
 | Date Library     | Luxon                                       |
 | CSS              | SCSS (scoped) + PrimeVue design tokens      |
 | Linting          | ESLint (flat config) + Prettier + Stylelint |
@@ -96,41 +97,80 @@ Always run `pnpm validate` before pushing code.
 ```
 src/
 ├── api/               # API client, gateway service, domain APIs, interceptors
+│   ├── services/      #   Domain API services (base, auth, admins)
+│   └── interceptors/  #   Request/response interceptors, token refresh
+│       ├── handlers/  #     HTTP status handlers
+│       └── utils/     #     Error utility helpers
 ├── assets/            # CSS, SCSS, images
 ├── components/        # Reusable Vue components
-│   ├── common/        #   Shared components (AppDataTable, AppEmpty, AppError, form/)
+│   ├── common/        #   Shared components (AppDataTable, AppEmpty, AppError, LanguageSwitcher, ...)
 │   │   └── form/      #   Form field wrappers (BaseField, InputTextField, SelectField, ...)
-│   └── layouts/       #   Layout components (MainLayout, AuthLayout, AppHeader, AppFooter)
-├── composables/       # Vue composables (useAlert, useDataTable, useI18n, ...)
+│   ├── layouts/       #   Layout components (MainLayout, AuthLayout, AppHeader, AppFooter)
+│   └── template/      #   Example/demo components (FormExamples, DatatableExample, ...)
+├── composables/       # Vue composables (useAlert, useDataTable, useI18n, useRouterNavigation, ...)
 ├── config/            # App configuration (env, services)
 ├── constants/         # Typed constants (routes, auth, roles, dateFormat)
 ├── locales/           # i18n translation files (en, vi, ko)
+├── modules/           # Feature modules (see Module Pattern below)
+│   ├── admin/         #   Admin management (views, routes)
+│   ├── calendar/      #   Calendar & booking (api, components, composables, stores, views)
+│   └── signalr/       #   Real-time SignalR (api, composables, services, stores)
 ├── plugins/           # Vue plugins (PrimeVue, i18n, error handler)
 ├── router/            # Vue Router config, guards, route modules
 ├── schemas/           # Yup validation schemas
 ├── stores/            # Pinia stores (auth, loading, shop)
+├── sw/                # Service worker (Workbox injectManifest: lifecycle, precache, routing)
+├── test/              # Test setup (Vitest configuration)
 ├── types/             # TypeScript type definitions
 ├── utils/             # Pure utility functions (dateUtils, colorUtils, storageUtils)
-├── views/             # Page-level components (organized by feature)
+├── views/             # Top-level page components (non-module pages)
 │   ├── Auth/          #   LoginView, ForgotPassword, ResetPassword
-│   ├── Home/          #   HomeView
-│   └── Admin/         #   AdminList, AdminCreate, AdminDetail, AdminEdit
+│   └── Home/          #   HomeView
+├── NotFound.vue       # 404 catch-all page
 ├── App.vue
 └── main.ts
 ```
 
+### Module Pattern
+
+Feature modules live in `src/modules/<name>/` with this structure:
+
+```
+src/modules/<name>/
+├── index.ts           # Public API — exports only what other modules need
+├── routes.ts          # Route definitions with module-scoped route name constants
+├── views/             # Page-level components (lazy-loaded in routes)
+├── components/        # Module-specific UI components
+├── composables/       # Module-specific composables
+├── stores/            # Module-specific Pinia stores
+├── api/               # Module-specific API service objects
+├── schemas/           # Module-specific Yup validation schemas
+├── types/             # Module-specific TypeScript types
+└── constants/         # Module-specific constants
+```
+
+**Rules:**
+
+- Each module's `index.ts` is the **public API boundary** — other modules import ONLY from `@/modules/<name>` (the index), never from internal paths
+- Routes are registered in `src/router/index.ts` by spreading into the main layout children
+- Module route names are defined as `const` objects with `as const` assertion in `routes.ts` (e.g. `ADMIN_ROUTE_NAMES`, `CALENDAR_ROUTE_NAMES`)
+- Global route names (`ROUTE_NAMES`) only contain shared routes (home, auth, 404); module-specific names stay in their module
+- Not all subdirectories are required — only create what the module actually needs
+
 ### File Naming Rules
 
-| File Type        | Convention                      | Example                          |
-| ---------------- | ------------------------------- | -------------------------------- |
-| Vue components   | **PascalCase** `.vue`           | `LoginView.vue`, `AppHeader.vue` |
-| TypeScript files | **camelCase** `.ts`             | `dateUtils.ts`, `auth.ts`        |
-| Composables      | **camelCase** with `use` prefix | `useAlert.ts`, `useDataTable.ts` |
-| Stores           | **camelCase** (domain name)     | `auth.ts`, `shop.ts`             |
-| Constants        | **camelCase** `.ts`             | `routeNames.ts`, `dateFormat.ts` |
-| Types            | **camelCase** `.ts`             | `api.ts`, `dataTable.ts`         |
-| Schemas          | **camelCase** `.ts`             | `loginSchema.ts`, `rules.ts`     |
-| Test files       | **camelCase** `.test.ts`        | `dateUtils.test.ts`              |
+| File Type        | Convention                      | Example                              |
+| ---------------- | ------------------------------- | ------------------------------------ |
+| Vue components   | **PascalCase** `.vue`           | `LoginView.vue`, `AppHeader.vue`     |
+| TypeScript files | **camelCase** `.ts`             | `dateUtils.ts`, `auth.ts`            |
+| Composables      | **camelCase** with `use` prefix | `useAlert.ts`, `useDataTable.ts`     |
+| Stores           | **camelCase** (domain name)     | `auth.ts`, `shop.ts`                 |
+| Constants        | **camelCase** `.ts`             | `routeNames.ts`, `dateFormat.ts`     |
+| Types            | **camelCase** `.ts`             | `api.ts`, `dataTable.ts`             |
+| Schemas          | **camelCase** `.ts`             | `loginSchema.ts`, `rules.ts`         |
+| Module API files | **camelCase** + `Api` suffix    | `bookingApi.ts`, `timeSlotApi.ts`    |
+| Module routes    | **camelCase** `.ts`             | `routes.ts`                          |
+| Test files       | **camelCase** `.test.ts`        | `dateUtils.test.ts`                  |
 
 ---
 
@@ -459,7 +499,7 @@ The following are auto-imported by `unplugin-vue-components` and **must not** be
 
 - **PrimeVue components:** `Button`, `InputText`, `Password`, `DataTable`, `Dialog`, `Message`, `Card`, `Select`, `DatePicker`, etc.
 - **Vue Router:** `RouterView`, `RouterLink`
-- **App components from `src/components/`:** `AppHeader`, `AppFooter`, `MainLayout`, `AuthLayout`, `AppEmpty`, `AppError`, `AppLoading`
+- **App components from `src/components/`:** `AppHeader`, `AppFooter`, `MainLayout`, `AuthLayout`, `AppEmpty`, `AppError`, `AppLoading`, `AppErrorDialog`, `AppGlobalLoading`, `AppPwaUpdate`, `LanguageSwitcher`
 
 **Should:**
 
@@ -1376,8 +1416,40 @@ api/
     ├── index.ts
     ├── request.ts     # Auth token injection
     ├── response.ts    # Error handling
-    └── tokenRefresh.ts
+    ├── tokenRefresh.ts
+    ├── handlers/
+    │   └── statusHandlers.ts  # HTTP status-specific error handlers
+    └── utils/
+        └── errorUtils.ts      # Error normalization helpers
 ```
+
+Module-specific API services live in `src/modules/<name>/api/` (e.g. `bookingApi.ts`, `timeSlotApi.ts`).
+
+### 10.4 SignalR (Real-time)
+
+Real-time communication uses the `signalr` module at `src/modules/signalr/`:
+
+```
+modules/signalr/
+├── api/
+│   └── signalrApi.ts          # SignalR hub endpoint calls
+├── composables/
+│   └── useSignalR.ts          # Vue composable wrapping connection lifecycle
+├── constants/
+│   └── signalrEvents.ts       # Hub event name constants
+├── services/
+│   └── SignalRConnection.ts   # SignalR connection manager (class-based)
+├── stores/
+│   └── signalRStore.ts        # Connection state & received messages
+└── types/
+    └── signalr.ts             # SignalR-specific TypeScript types
+```
+
+**Rules:**
+
+- `SignalRConnection.ts` is **the only class** in the project — justified as a connector to an external system
+- Use `useSignalR` composable in components, not the connection service directly
+- Hub event names must use constants from `signalrEvents.ts`
 
 ---
 
@@ -1826,15 +1898,23 @@ DateTime.now().toFormat('yyyy-MM-dd')
 
 ### 14.2 Route Names as Typed Constants
 
-Always use `ROUTE_NAMES` for navigation. Never hardcode route paths or names.
+Always use typed route name constants for navigation. Never hardcode route paths or names.
+
+- **Global routes** (auth, home, 404): `ROUTE_NAMES` from `@/constants`
+- **Module routes**: `MODULE_ROUTE_NAMES` from `@/modules/<name>` (e.g. `ADMIN_ROUTE_NAMES`, `CALENDAR_ROUTE_NAMES`)
 
 **Should:**
 
 ```typescript
+// Global routes — use ROUTE_NAMES from @/constants
 import { ROUTE_NAMES } from '@/constants'
 
 await navigateTo(ROUTE_NAMES.HOME)
-await navigateTo(ROUTE_NAMES.ADMIN_DETAIL, { params: { id: '123' } })
+
+// Module routes — use module-specific route name constants
+import { ADMIN_ROUTE_NAMES } from '@/modules/admin'
+
+await navigateTo(ADMIN_ROUTE_NAMES.ADMIN_DETAIL, { params: { id: '123' } })
 ```
 
 **Should Not:**
@@ -2059,6 +2139,8 @@ Files matching `**/*.test.ts`, `**/*.spec.ts` have relaxed rules:
 | Imports          | Grouped by type, `import type` for types         |
 | Errors           | `try/catch`, typed `unknown`, never silent       |
 | Dates            | `LUXON_*` / `PRIMEVUE_*` constants               |
-| Routes           | `ROUTE_NAMES.X` constant                         |
+| Routes (global)  | `ROUTE_NAMES.X` constant                         |
+| Routes (module)  | `MODULE_ROUTE_NAMES.X` from module index         |
+| Modules          | `src/modules/<name>/`, public API via `index.ts`  |
 | i18n             | `$t('key')` for all user-facing text             |
 | Styles           | `scoped lang="scss"`, BEM, PrimeVue vars         |
